@@ -1,54 +1,90 @@
-CREATE TABLE Bank (
-  bank_id INT PRIMARY KEY,
-  name VARCHAR(255),
-  code VARCHAR(10),
-  address VARCHAR(255)
+create table Bank
+(
+code int primary key NOT NULL ,
+name varchar(20) NOT NULL ,
+address varchar(250) NOT NULL
 );
 
-CREATE TABLE Bank_Branch (
-  branch_id INT PRIMARY KEY,
-  bank_id INT,
-  address VARCHAR(255),
-  branch_number VARCHAR(10),
-  FOREIGN KEY (bank_id) REFERENCES Bank(bank_id)
+create table Branch
+(
+branch_number int primary key NOT NULL ,
+code int NOT NULL ,
+address varchar(250) NOT NULL ,
+foreign key (code) references Bank(code)
 );
 
-CREATE TABLE Customer (
-  ssn INT PRIMARY KEY,
-  name VARCHAR(255),
-  phone VARCHAR(15),
-  address VARCHAR(255)
+create table Employee
+(emp_id int primary key NOT NULL ,
+branch_number int NOT NULL ,
+employee_name varchar(20) NOT NULL ,
+salary INT NOT NULL ,
+foreign key (branch_number) references Branch(branch_number)
 );
 
-CREATE TABLE Account (
-  account_number INT PRIMARY KEY,
-  customer_ssn INT,
-  balance DECIMAL(12, 2),
-  type VARCHAR(20),
-  FOREIGN KEY (customer_ssn) REFERENCES Customer(ssn)
+create table Customer
+(SSN int primary key NOT NULL ,
+branch_number int NOT NULL ,
+name varchar(20) NOT NULL ,
+phone int NOT NULL ,
+address varchar(250) NOT NULL ,
+foreign key (branch_number) references Branch(branch_number)
 );
 
-CREATE TABLE Loan (
-  loan_number INT PRIMARY KEY,
-  loan_type VARCHAR(50),
-  loan_amount DECIMAL(12, 2),
-  branch_id INT,
-  FOREIGN KEY (branch_id) REFERENCES Bank_Branch(branch_id)
+create table Account
+(account_number int primary key NOT NULL ,
+SSN int NOT NULL ,
+balance int NOT NULL ,
+type varchar(20) NOT NULL ,
+foreign key (SSN) references Customer(SSN)
 );
 
-CREATE TABLE Employee (
-  employee_id INT PRIMARY KEY,
-  name VARCHAR(255),
-  phone VARCHAR(15),
-  address VARCHAR(255)
+create table Admin
+(emp_id INT NOT NULL ,
+name VARCHAR(20) NOT NULL ,
+foreign key (emp_id) references Employee(emp_id)
 );
 
-CREATE TABLE Loan_Operation (
-  operation_id INT PRIMARY KEY,
-  loan_number INT,
-  employee_id INT,
-  operation_type VARCHAR(20),
-  operation_date DATE,
-  FOREIGN KEY (loan_number) REFERENCES Loan(loan_number),
-  FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+create table Loan
+(loan_number int primary key NOT NULL ,
+emp_id int NOT NULL ,
+loan_type varchar(20) NOT NULL ,
+loan_amount int NOT NULL ,
+foreign key (emp_id) references Employee(emp_id)
 );
+
+create table offer
+(
+branch_number int not null,
+loan_number int not null,
+PRIMARY KEY (branch_number,loan_number),
+foreign key (branch_number) references Branch(branch_number),
+foreign key (loan_number) references Loan(loan_number)
+);
+
+create table take_loan
+(SSN int not null,
+loan_number int not null,
+PRIMARY KEY (SSN,loan_number),
+foreign key (SSN) references Customer(SSN),
+foreign key (loan_number) references Loan(loan_number)
+);
+
+create table handle_client
+(SSN int not null,
+emp_id int not null,
+PRIMARY KEY (SSN, emp_id),
+foreign key (SSN) references Customer(SSN),
+foreign key (emp_id) references Employee(emp_id)
+);
+
+INSERT INTO Bank (code, name, address) VALUES (1, 'ABC Bank', '123 Main Street');
+INSERT INTO Customer (SSN, branch_number, name, phone, address) VALUES (123456789, 1, 'John Doe', 1234567890, '456 Elm Street');
+
+DELETE FROM Loan WHERE loan_number = 1001;
+DELETE FROM Admin WHERE emp_id = 100;
+
+UPDATE Account SET balance = 5000 WHERE account_number = 10001;
+UPDATE Employee SET salary = 60000 WHERE emp_id = 200;
+
+SELECT * FROM Customer;
+SELECT Bank.name, Branch.branch_number, Branch.address FROM Bank INNER JOIN Branch ON Bank.code = Branch.code;
