@@ -31,9 +31,9 @@ foreign key (branch_number) references Branch(branch_number)
 );
 
 create table Account
-(account_number int primary key NOT NULL ,
+(account_number int identity(1,1) primary key NOT NULL  ,
 SSN int NOT NULL ,
-balance int NOT NULL ,
+balance int default '0' ,
 type varchar(20) NOT NULL ,
 foreign key (SSN) references Customer(SSN)
 );
@@ -54,7 +54,7 @@ foreign key (emp_id) references Employee(emp_id)
 
 create table offer
 (
-branch_number int not null,
+branch_number int,
 loan_number int not null,
 PRIMARY KEY (branch_number,loan_number),
 foreign key (branch_number) references Branch(branch_number),
