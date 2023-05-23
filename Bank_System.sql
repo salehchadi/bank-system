@@ -7,7 +7,7 @@ address varchar(250) NOT NULL
 
 create table Branch
 (
-branch_number int primary key NOT NULL ,
+branch_number int primary key,
 code int NOT NULL ,
 address varchar(250) NOT NULL ,
 foreign key (code) references Bank(code)
@@ -15,7 +15,7 @@ foreign key (code) references Bank(code)
 
 create table Employee
 (emp_id int primary key NOT NULL ,
-branch_number int NOT NULL ,
+branch_number int ,
 employee_name varchar(20) NOT NULL ,
 salary INT NOT NULL ,
 foreign key (branch_number) references Branch(branch_number)
@@ -23,7 +23,7 @@ foreign key (branch_number) references Branch(branch_number)
 
 create table Customer
 (SSN int primary key NOT NULL ,
-branch_number int NOT NULL ,
+branch_number int ,
 name varchar(20) NOT NULL ,
 phone int NOT NULL ,
 address varchar(250) NOT NULL ,
